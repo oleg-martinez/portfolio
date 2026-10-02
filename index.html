@@ -199,9 +199,9 @@ hr.div{border:none;border-top:1px solid var(--border)}
 footer{border-top:1px solid var(--border);padding:32px;text-align:center;font-size:12px;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:8px}
 .fdot{color:var(--accent)}
 /* HERO VIDEO DIVIDER */
-.hero-video-divider{position:relative;height:150px;overflow:hidden;background:#080808;isolation:isolate}
-.hero-video-divider video{position:absolute;inset:-6px;width:calc(100% + 12px);height:calc(100% + 12px);object-fit:cover;filter:blur(3px);opacity:.62;pointer-events:none}
-.hero-video-divider::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(8,8,8,.72),rgba(8,8,8,.12) 25%,rgba(8,8,8,.12) 75%,rgba(8,8,8,.72)),linear-gradient(0deg,rgba(8,8,8,.8),transparent 35%,transparent 65%,rgba(8,8,8,.8))}
+.hero-video-divider{position:absolute;right:0;bottom:0;left:0;height:100px;overflow:hidden;background:#080808;isolation:isolate;pointer-events:none;z-index:0}
+.hero-video-divider video{position:absolute;inset:-4px;width:calc(100% + 8px);height:calc(100% + 8px);object-fit:cover;filter:blur(1px);opacity:.72}
+.hero-video-divider::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(8,8,8,.62),rgba(8,8,8,.08) 25%,rgba(8,8,8,.08) 75%,rgba(8,8,8,.62)),linear-gradient(0deg,rgba(8,8,8,.72),transparent 30%,transparent 70%,rgba(8,8,8,.72))}
 /* LIGHTBOX */
 #lb{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);align-items:center;justify-content:center;cursor:zoom-out;animation:lbIn .25s ease}
 #lb.on{display:flex}
@@ -217,6 +217,7 @@ footer{border-top:1px solid var(--border);padding:32px;text-align:center;font-si
 .hero .fu:nth-child(2){animation-delay:.15s}
 @keyframes hReveal{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .hero-stats{animation:hReveal .7s .35s ease both}
+.hero>.wrap{position:relative;z-index:1}
 @media(max-width:768px){
   nav{padding:0 20px}.nav-links{display:none}section{padding:64px 0}.wrap{padding:0 20px}
   .hero-grid{grid-template-columns:1fr}.hero-photo-wrap{display:none}
@@ -254,6 +255,9 @@ footer{border-top:1px solid var(--border);padding:32px;text-align:center;font-si
 </nav>
 <!-- HERO -->
 <section class="hero" id="hero">
+  <div class="hero-video-divider" aria-hidden="true">
+    <video autoplay loop muted playsinline preload="auto"><source src="media/hero-divider.mp4" type="video/mp4"></video>
+  </div>
   <div class="wrap">
     <div class="hero-grid">
       <div class="fu">
@@ -285,9 +289,6 @@ footer{border-top:1px solid var(--border);padding:32px;text-align:center;font-si
     </div>
   </div>
 </section>
-<div class="hero-video-divider" aria-hidden="true">
-  <video autoplay loop muted playsinline preload="auto"><source src="media/hero-divider.mp4" type="video/mp4"></video>
-</div>
 <!-- ABOUT -->
 <section id="about">
   <div class="wrap">
@@ -486,7 +487,14 @@ document.addEventListener('DOMContentLoaded',function(){
     });
   }
   var dividerVideo=document.querySelector('.hero-video-divider video');
-  if(dividerVideo){dividerVideo.playbackRate=.8;dividerVideo.addEventListener('loadedmetadata',function(){dividerVideo.playbackRate=.8;});}
+  if(dividerVideo){
+    var loopLead=1.25;
+    dividerVideo.playbackRate=.8;
+    dividerVideo.addEventListener('loadedmetadata',function(){dividerVideo.playbackRate=.8;});
+    dividerVideo.addEventListener('timeupdate',function(){
+      if(dividerVideo.duration&&dividerVideo.currentTime>=dividerVideo.duration-loopLead){dividerVideo.currentTime=.05;}
+    });
+  }
   var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:0.08});
   document.querySelectorAll('.fu').forEach(function(el){obs.observe(el);});
   // Custom audio players
