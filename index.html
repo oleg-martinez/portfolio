@@ -198,9 +198,10 @@ hr.div{border:none;border-top:1px solid var(--border)}
 .cc-val a{color:var(--text)}.cc-val a:hover{color:var(--accent)}
 footer{border-top:1px solid var(--border);padding:32px;text-align:center;font-size:12px;color:var(--text2);display:flex;align-items:center;justify-content:center;gap:8px}
 .fdot{color:var(--accent)}
-/* HERO WAVE */
-.hero-wave{position:absolute;bottom:0;left:0;right:0;height:100px;display:flex;align-items:flex-end;gap:2px;pointer-events:none;z-index:0;overflow:hidden}
-.hero-wave-bar{flex:1;border-radius:2px 2px 0 0;background:linear-gradient(to top,var(--accent),transparent);opacity:.06;transform-origin:bottom}
+/* HERO VIDEO DIVIDER */
+.hero-video-divider{position:relative;height:150px;overflow:hidden;background:#080808;isolation:isolate}
+.hero-video-divider video{position:absolute;inset:-6px;width:calc(100% + 12px);height:calc(100% + 12px);object-fit:cover;filter:blur(3px);opacity:.62;pointer-events:none}
+.hero-video-divider::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(8,8,8,.72),rgba(8,8,8,.12) 25%,rgba(8,8,8,.12) 75%,rgba(8,8,8,.72)),linear-gradient(0deg,rgba(8,8,8,.8),transparent 35%,transparent 65%,rgba(8,8,8,.8))}
 /* LIGHTBOX */
 #lb{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);align-items:center;justify-content:center;cursor:zoom-out;animation:lbIn .25s ease}
 #lb.on{display:flex}
@@ -221,7 +222,7 @@ footer{border-top:1px solid var(--border);padding:32px;text-align:center;font-si
   .hero-grid{grid-template-columns:1fr}.hero-photo-wrap{display:none}
   .hero-stats{grid-template-columns:1fr 1fr}.about-grid{grid-template-columns:1fr}.exp-pts{grid-template-columns:1fr}
 }
-@media(prefers-reduced-motion:reduce){.fu{opacity:1;transform:none}.hero-wave-bar,.nav-dot{animation:none}}
+@media(prefers-reduced-motion:reduce){.fu{opacity:1;transform:none}.nav-dot{animation:none}}
 
 /* VU behind hero-stats */
 .vu-bg{position:absolute;inset:0;display:flex;align-items:flex-end;pointer-events:none;z-index:0;overflow:hidden;}
@@ -253,7 +254,6 @@ footer{border-top:1px solid var(--border);padding:32px;text-align:center;font-si
 </nav>
 <!-- HERO -->
 <section class="hero" id="hero">
-  <div class="hero-wave" id="heroWave"></div>
   <div class="wrap">
     <div class="hero-grid">
       <div class="fu">
@@ -285,6 +285,9 @@ footer{border-top:1px solid var(--border);padding:32px;text-align:center;font-si
     </div>
   </div>
 </section>
+<div class="hero-video-divider" aria-hidden="true">
+  <video autoplay loop muted playsinline preload="auto"><source src="media/hero-divider.mp4" type="video/mp4"></video>
+</div>
 <!-- ABOUT -->
 <section id="about">
   <div class="wrap">
@@ -482,8 +485,8 @@ document.addEventListener('DOMContentLoaded',function(){
       applyLang(cur==='es'?'en':'es');
     });
   }
-  var hw=document.getElementById('heroWave');
-  if(hw){for(var i=0;i<150;i++){var b=document.createElement('div');b.className='hero-wave-bar';b.style.height=(12+Math.random()*80)+'px';b.style.animationDelay=(Math.random()*3)+'s';b.style.animationDuration=(2.5+Math.random()*4)+'s';hw.appendChild(b);}}
+  var dividerVideo=document.querySelector('.hero-video-divider video');
+  if(dividerVideo){dividerVideo.playbackRate=.8;dividerVideo.addEventListener('loadedmetadata',function(){dividerVideo.playbackRate=.8;});}
   var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:0.08});
   document.querySelectorAll('.fu').forEach(function(el){obs.observe(el);});
   // Custom audio players
